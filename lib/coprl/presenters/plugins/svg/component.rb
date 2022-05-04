@@ -11,8 +11,8 @@ module Coprl
             super(type: :svg, **attribs, &block)
 
             @path = path
-            @width = attribs.delete(:width)
-            @height = attribs.delete(:height)
+            @width = validate_size(attribs.delete(:width))
+            @height = validate_size(attribs.delete(:height))
             expand!
           end
 
@@ -26,6 +26,13 @@ module Coprl
             end
           end
 
+          # Ensure all size values have a unit, defaulting to pixels.
+          def validate_size(value)
+            return unless value
+            return "#{value}px" if value.to_s.match?(/\A\d+\Z/)
+
+            value
+          end
         end
       end
     end
