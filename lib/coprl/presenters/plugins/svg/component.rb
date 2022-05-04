@@ -10,19 +10,33 @@ module Coprl
           def initialize(path, **attribs, &block)
             super(type: :svg, **attribs, &block)
 
-            @path = path
+            @path = validate_path(path)
             @width = validate_size(attribs.delete(:width))
             @height = validate_size(attribs.delete(:height))
+
             expand!
           end
 
-          def full_path
+          def render_raw_svg
+            File.read(path).html_safe
+          end
+
+          private
+
+          def full_path(path)
             Dir.pwd + "/public/#{path.delete_prefix('/')}"
           end
 
-          def render_raw_svg
-            if File.exists?(full_path)
-              File.read(full_path).html_safe
+          def validate_path(path)
+            full_file_path = full_path(path)
+            unless File.exist?(full_file_path)
+              raise Errors::ParameterValidation, 'There was no file found in the given path'
+            end
+
+            if File.extname(full_file_path).delete('.') == 'svg'
+              full_file_path
+            else
+              raise Errors::ParameterValidation, 'The given file is not a svg'
             end
           end
 
