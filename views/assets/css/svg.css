@@ -1,0 +1,9 @@
+.svg-container{
+  display: flex;
+  justify-content: center;
+}
+
+.svg-container svg{
+  width: inherit;
+  height: inherit;
+}

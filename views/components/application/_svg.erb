@@ -1,0 +1,12 @@
+<% if comp
+ fit_class = comp.fit ? "v-image--fit-#{comp.try(:fit)}" : ''
+%>
+<div id="<%= comp.id %>"
+     style="width: <%= comp.width.presence || 'auto' %>; height: <%= comp.height.presence || 'auto' %>"
+     class="svg-container v-image <%= fit_class %> <%= 'v-actionable' if comp.events %>"
+     <%= partial "components/event", :locals => {comp: comp, events: comp.events, parent_id: comp.event_parent_id} if comp.events&.any? %>
+>
+  <%= partial "components/tooltip" , :locals => {comp: comp.tooltip, parent_id: comp.id} if comp.tooltip %>
+  <%= comp.render_raw_svg %>
+</div>
+<% end %>
