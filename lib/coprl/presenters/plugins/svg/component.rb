@@ -5,14 +5,31 @@ module Coprl
     module Plugins
       module Svg
         class Component < DSL::Components::EventBase
-          attr_accessor :path, :width, :height
+          DEFAULT_POSITION = :center
+
+          attr_accessor :path,
+                        :min_height,
+                        :height,
+                        :max_height,
+                        :min_width,
+                        :width,
+                        :max_width,
+                        :position
+
 
           def initialize(path, **attribs, &block)
             super(type: :svg, **attribs, &block)
 
             @path = validate_path(path)
+            @min_width = validate_size(attribs.delete(:min_width))
             @width = validate_size(attribs.delete(:width))
+            @max_width = validate_size(attribs.delete(:max_width))
+
+            @min_height = validate_size(attribs.delete(:min_height))
             @height = validate_size(attribs.delete(:height))
+            @max_height = validate_size(attribs.delete(:max_height))
+
+            @position = attribs.delete(:position) { DEFAULT_POSITION }
 
             expand!
           end
